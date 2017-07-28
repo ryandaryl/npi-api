@@ -1,94 +1,38 @@
 <html>
 </html>
+<script src="data_gov_request.js"></script>
 <script>
 
 
-cbfunc = function(data) {
-    if (!'result' in data) {
-        console.log('error')
-        return
+my_display = function(data) {
+    if (!('result' in data && 'records' in data['result'])) {
+        print_text = 'Something went wrong.'
     }
+    record_count = data['result']['records'].length
+    print_text = `Your search returned ${ record_count } results.`
+    document.write(print_text)
+    console.log(print_text)
+}                                    // Change this function to do whatever you want with the results of the query.
 
 
-    item_names = [
-        'air_total_emission_kg',
-        'facility_name',
-        'latitude',
-        'longitude',
-        'primary_anzsic_class_name',
-        'report_year',
-        'substance_name'
-    ]
+function_name = my_display          // Change this to the of the         
+                                    // function to be called.
+                                    // Don't use quotes.
 
 
-    dirs = [
-        'latitude',
-        'longitude'
-    ]
+columns = '*'                       // A list of column names.
+                                    // '*' gets them all.
 
 
-    records = data['result']['records']
-    show_records = []
-    coords = { 'latitude': [], 'longitude': []}
+table_id = '9ec26edf-ea5b-4869-8c2c-38b41fb3a51d'
+                                    // Change this to the id of the table you want to quwry. You can get it by clicking "Explore" for a .csv file at data.gov.au, then clicking the green "Data-API" button.
 
 
-    for (i = 0; i < records.length; i++) {
-        record = {}
-        for (j = 0; j < item_names.length; j++) {
-            record[item_names[j]] = records[i][item_names[j]]
-        }
-        show_records.push(record)
-        for (j in dirs) {
-            coords[dirs[j]].push(records[i][dirs[j]])
-        }
-    }
-    border = 0.1
-    lat_long_box = {
-        'x0': Math.min(...coords['latitude']) - border,
-        'x1': Math.max(...coords['latitude']) + border,
-        'y0': Math.min(...coords['longitude']) - border,
-        'y1': Math.max(...coords['longitude']) + border
-    }
-    console.log(lat_long_box)
-    screen_box = {
-        'x0': 0,
-        'x1': window.innerWidth,
-        'y0': 0,
-        'y1': window.innerHeight,
-    }
-    xy = ['x', 'y']
-    for (i = 0; i < show_records.length; i++) {
-        for (j = 0; j < 2; j++) {
-            show_records[i]['screen_' + xy[j]] = (
-              (show_records[i][dirs[j]] - lat_long_box[xy[j] + '0'])
-           / (lat_long_box[xy[j] + '1'] - lat_long_box[xy[j] + '0'])
-           ) * (
-              screen_box[xy[j] + '1'] - screen_box[xy[j] + '0']
-            )
-        }
-    }
-    console.log(show_records)
-}
+sql_query = 'WHERE latitude >-17 AND latitude <-16.8 AND longitude >145.2 AND longitude <145.4'
+                                    // Put your SQL query here.
 
 
-var xhr = new XMLHttpRequest();
-xhr.onreadystatechange = function () {
-    if (xhr.readyState == 4 && xhr.status == 200)  {
-        cbfunc(JSON.parse(xhr.responseText));
-    }
-};
-
-
-sendRequest = function() {
-    console.log('sent')
-    url = 'http://data.gov.au/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%229ec26edf-ea5b-4869-8c2c-38b41fb3a51d%22%20WHERE%20latitude%20>-17%20AND%20latitude%20<-16.8%20AND%20longitude%20>145.2%20AND%20longitude%20<145.4'
-    xhr.open("GET", url);
-    xhr.send();
-}
-
-
-console.log('doing')
-sendRequest()
+sendRequest(function_name, columns, table_id, sql_query)
 
 
 </script>
