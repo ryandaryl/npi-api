@@ -1,0 +1,31 @@
+<html>
+</html>
+<script>
+
+
+cbfunc = function(data) {
+    console.log(data)
+}
+
+
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange = function () {
+    if (xhr.readyState == 4 && xhr.status == 200)  {
+        cbfunc(JSON.parse(xhr.responseText));
+    }
+};
+
+
+sendRequest = function() {
+    console.log('sent')
+    url = 'http://data.gov.au/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%22f83cdee9-ebcb-4f24-941b-34bb2f0996cf%22%20WHERE%20latitude%20>-17%20AND%20latitude%20<-16'
+    xhr.open("GET", url);
+    xhr.send();
+}
+
+
+console.log('doing')
+sendRequest()
+
+
+</script>
