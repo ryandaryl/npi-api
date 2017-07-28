@@ -18,7 +18,7 @@ xhr.onreadystatechange = function () {
 
 sendRequest = function() {
     console.log('sent')
-    url = 'http://data.gov.au/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%22f83cdee9-ebcb-4f24-941b-34bb2f0996cf%22%20WHERE%20latitude%20>-17%20AND%20latitude%20<-16'
+    url = 'http://data.gov.au/api/action/datastore_search_sql?sql=SELECT%20*%20from%20%229ec26edf-ea5b-4869-8c2c-38b41fb3a51d%22%20WHERE%20latitude%20>-17%20AND%20latitude%20<-16.8%20AND%20longitude%20>145.2%20AND%20longitude%20<145.4'
     xhr.open("GET", url);
     xhr.send();
 }
